@@ -8,14 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var favorites = FavoritePokemons()
+    @StateObject var networkMonitor = NetworkMonitor()
+    let pokemonDatasource = PokemonDatasource()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            PokemonListView(viewModel: PokemonListViewModel(pokemonDatasource: pokemonDatasource, networkMonitor: networkMonitor))
+                .tabItem {
+                    Label {
+                        Text("Pokemon")
+                    } icon: {
+                        Image(systemName: "list.bullet")
+                    }
+                }
+            
+            FavoritePokemonsListView()
+                .tabItem {
+                    Label {
+                        Text("Favorites")
+                    } icon: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
+            
         }
-        .padding()
+        .environment(favorites)
     }
 }
 
